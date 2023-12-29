@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { supabase } from '../supabase/client';
 
@@ -9,13 +10,29 @@ const Nav = ({ session }) => {
   return (
     <AppBar position='static'>
       <Toolbar>
-        <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
-          Vehicle Maintenance Log
-        </Typography>
+        <Link
+          to='/'
+          style={{ textDecoration: 'none', color: 'inherit', flexGrow: 1 }}
+        >
+          <Typography variant='h6' component='div'>
+            Maintenance Log
+          </Typography>
+        </Link>
         {session && (
-          <Button color='inherit' onClick={handleSignOut}>
-            Sign Out
-          </Button>
+          <>
+            <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Button color='inherit'>Dashboard</Button>
+            </Link>
+            <Link
+              to='/profile'
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <Button color='inherit'>Profile</Button>
+            </Link>
+            <Button color='inherit' onClick={handleSignOut}>
+              Sign Out
+            </Button>
+          </>
         )}
       </Toolbar>
     </AppBar>
