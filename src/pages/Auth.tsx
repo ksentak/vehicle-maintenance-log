@@ -7,14 +7,24 @@ import {
   Container,
   Typography,
   Alert,
+  AlertColor,
 } from '@mui/material';
+import { isValidEmail } from '../utils/utils';
+
+type AlertMessageObj = {
+  msg: string;
+  type: AlertColor;
+};
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
+  const [alertMessageObj, setAlertMessageObj] = useState<AlertMessageObj>({
+    msg: '',
+    type: 'info',
+  });
   const [showAlert, setShowAlert] = useState(false);
 
   const handleSendOtp = async (e) => {
@@ -22,19 +32,35 @@ const Auth = () => {
     setIsLoading(true);
     setShowAlert(false);
 
+    if (!isValidEmail(email)) {
+      setAlertMessageObj({
+        msg: 'Please enter a valid email address.',
+        type: 'error',
+      });
+      setShowAlert(true);
+      setIsLoading(false);
+      return;
+    }
+
     // Sign in with one-time password
     const { error } = await supabase.auth.signInWithOtp({ email });
 
     if (error) {
       console.log(error);
-      setAlertMessage('Uh oh. Something went wrong when trying to sign in.');
+      setAlertMessageObj({
+        msg: 'Uh oh. Something went wrong when trying to sign in.',
+        type: 'error',
+      });
       setShowAlert(true);
     } else {
-      setAlertMessage('Check your email for a one time passcode.');
+      setAlertMessageObj({
+        msg: 'Check your email for a one time passcode.',
+        type: 'info',
+      });
       setShowAlert(true);
+      setOtpSent(true);
     }
 
-    setOtpSent(true);
     setIsLoading(false);
   };
 
@@ -51,7 +77,10 @@ const Auth = () => {
 
     if (error) {
       console.log(error);
-      setAlertMessage('Uh oh. Something went wrong when trying to sign in.');
+      setAlertMessageObj({
+        msg: 'Uh oh. Something went wrong when trying to sign in.',
+        type: 'error',
+      });
       setShowAlert(true);
     }
 
@@ -72,14 +101,14 @@ const Auth = () => {
         }}
       >
         <Typography component='h1' variant='h4'>
-          Sign In
+          Sign In / Sign Up
         </Typography>
         <Typography variant='body1' sx={{ mt: 2 }}>
           Enter your email to receive a one-time passcode.
         </Typography>
         {showAlert && (
-          <Alert severity='info' sx={{ width: '100%', mt: 2 }}>
-            {alertMessage}
+          <Alert severity={alertMessageObj.type} sx={{ width: '95%', mt: 2 }}>
+            {alertMessageObj.msg}
           </Alert>
         )}
         <Box component='form' sx={{ mt: 1 }}>
