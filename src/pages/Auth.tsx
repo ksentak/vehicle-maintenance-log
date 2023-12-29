@@ -11,9 +11,9 @@ import {
 
 const Auth = () => {
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('k.sentak@yahoo.com');
+  const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
-  const [otpSent, setOtpSent] = useState(true);
+  const [otpSent, setOtpSent] = useState(false);
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
