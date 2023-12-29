@@ -1,10 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { supabase } from '../supabase/client';
 
 const Nav = ({ session }) => {
+  const navigate = useNavigate();
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    navigate('/');
   };
 
   return (
