@@ -11,20 +11,43 @@ import {
 
 const Auth = () => {
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('k.sentak@yahoo.com');
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(true);
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
-
+  const handleSendOtp = async (e) => {
+    e.preventDefault();
     setLoading(true);
+
+    // Sign in with one-time password
     const { error } = await supabase.auth.signInWithOtp({ email });
 
     if (error) {
-      alert(error.message);
+      console.log(error);
+      alert('Uh oh. Something went wrong when trying to sign in.');
     } else {
-      alert('Check your email for the login link!');
+      alert('Check your email for a one time passcode.');
     }
     setLoading(false);
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token: otp,
+      type: 'email',
+    });
+
+    if (error) {
+      console.log(error);
+      alert('Uh oh. Something went wrong when trying to sign in.');
+    }
+
+    setLoading(false);
+    setOtpSent(true);
   };
 
   return (
@@ -43,10 +66,6 @@ const Auth = () => {
         <Typography component='h1' variant='h4'>
           Vehicle Maintenance Log
         </Typography>
-        <Typography variant='body1' sx={{ mt: 2 }}>
-          Enter your email to sign in or create an account. A sign-in link will
-          be sent to your email address.
-        </Typography>
         <Box component='form' sx={{ mt: 1 }}>
           <TextField
             margin='normal'
@@ -56,22 +75,42 @@ const Auth = () => {
             label='Email Address'
             name='email'
             autoComplete='email'
+            size='small'
             autoFocus
             onChange={(e) => setEmail(e.target.value)}
+            disabled={otpSent}
           />
-          <Button
-            fullWidth
-            variant='contained'
-            sx={{ mt: 3, mb: 2 }}
-            onClick={handleLogin}
-            disabled={loading}
-          >
-            Sign In
-          </Button>
-          {loading && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-              <CircularProgress />
-            </Box>
+          {!otpSent ? (
+            <Button
+              fullWidth
+              variant='contained'
+              sx={{ mt: 3, mb: 2 }}
+              onClick={handleSendOtp}
+              disabled={loading}
+            >
+              Send OTP
+            </Button>
+          ) : (
+            <>
+              <TextField
+                margin='normal'
+                required
+                fullWidth
+                id='otp'
+                label='OTP'
+                name='otp'
+                onChange={(e) => setOtp(e.target.value)}
+              />
+              <Button
+                fullWidth
+                variant='contained'
+                sx={{ mt: 3, mb: 2 }}
+                onClick={handleVerifyOtp}
+                disabled={loading}
+              >
+                Verify OTP
+              </Button>
+            </>
           )}
         </Box>
       </Box>
