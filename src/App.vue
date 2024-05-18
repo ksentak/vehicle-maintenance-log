@@ -1,7 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { RouterView } from 'vue-router';
+</script>
 
 <template>
-  <h1>Welcome to Vehicle Maintenance Log</h1>
+  <Router-View />
 </template>
-
-<style scoped></style>
