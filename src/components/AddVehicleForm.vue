@@ -3,21 +3,22 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import useUserStore from '../stores/userStore';
 import { addVehicle } from '../services/vehicleService';
+import Vehicle from '../interfaces/Vehicle';
 
 const make = ref('');
 const model = ref('');
-const year = ref<number | null>(null);
+const year = ref<number>(0);
 const vin = ref('');
-const mileage = ref<number | null>(null);
+const mileage = ref<number>(0);
 const router = useRouter();
 const userStore = useUserStore();
 
 const handleSubmit = async () => {
   if (userStore.user) {
-    const vehicle = {
+    const vehicle: Vehicle = {
+      year: year.value,
       make: make.value,
       model: model.value,
-      year: year.value,
       vin: vin.value,
       mileage: mileage.value,
     };
@@ -35,8 +36,18 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="container mt-2">
+  <div class="container mt-2 mb-4">
     <form @submit.prevent="handleSubmit">
+      <div class="mb-3">
+        <label for="year" class="form-label">Year</label>
+        <input
+          type="number"
+          class="form-control"
+          id="year"
+          v-model="year"
+          required
+        />
+      </div>
       <div class="mb-3">
         <label for="make" class="form-label">Make</label>
         <input
@@ -54,16 +65,6 @@ const handleSubmit = async () => {
           class="form-control"
           id="model"
           v-model="model"
-          required
-        />
-      </div>
-      <div class="mb-3">
-        <label for="year" class="form-label">Year</label>
-        <input
-          type="number"
-          class="form-control"
-          id="year"
-          v-model="year"
           required
         />
       </div>
