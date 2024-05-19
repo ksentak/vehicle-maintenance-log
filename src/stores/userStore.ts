@@ -15,7 +15,7 @@ const useUserStore = defineStore('userStore', () => {
     if (docSnap.exists()) {
       userDetails.value = docSnap.data();
     } else {
-      console.log('No such document!');
+      console.log('No such user!');
     }
   };
 

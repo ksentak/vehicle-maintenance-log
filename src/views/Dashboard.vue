@@ -3,24 +3,11 @@ import { ref, onMounted } from 'vue';
 import capitalize from 'lodash/capitalize';
 import Card from '../components/Card.vue';
 import AddVehicleCard from '../components/AddVehicleCard.vue';
-import useUserStore from '../stores/userStore';
-import { getVehicles } from '../services/vehicleService';
+import useVehicleStore from '../stores/vehicleStore';
 import Vehicle from '../interfaces/Vehicle';
 
+const vehicleStore = useVehicleStore();
 const vehicles = ref<Vehicle[]>([]);
-const userStore = useUserStore();
-
-const fetchVehicles = async () => {
-  if (userStore.user) {
-    try {
-      vehicles.value = await getVehicles(userStore.user.uid);
-    } catch (err) {
-      console.log(err);
-    }
-  } else {
-    console.error('User is not authenticated.');
-  }
-};
 
 const formatCardTitle = (vehicle: Vehicle) => {
   const { make, model, year } = vehicle;
@@ -29,7 +16,12 @@ const formatCardTitle = (vehicle: Vehicle) => {
   return cardTitle;
 };
 
-onMounted(fetchVehicles);
+onMounted(async () => {
+  if (vehicleStore.vehicles.length === 0) {
+    await vehicleStore.fetchVehicles();
+  }
+  vehicles.value = vehicleStore.vehicles;
+});
 </script>
 
 <template>
@@ -47,5 +39,3 @@ onMounted(fetchVehicles);
     </div>
   </div>
 </template>
-
-<style scoped></style>
