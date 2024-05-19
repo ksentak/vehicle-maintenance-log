@@ -10,5 +10,3 @@ import BackBtn from '../components/BackBtn.vue';
     <AddVehicleForm />
   </div>
 </template>
-
-<style scoped></style>

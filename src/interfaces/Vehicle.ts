@@ -1,9 +1,8 @@
-interface Vehicle {
+export default interface Vehicle {
+  id?: string;
   make: string;
   model: string;
-  year: number;
+  year: number | null;
   vin?: string;
-  mileage?: number;
+  mileage?: number | null;
 }
-
-export default Vehicle;

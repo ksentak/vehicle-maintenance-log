@@ -1,24 +1,29 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import range from 'lodash/range';
+import lowercase from 'lodash/lowercase';
 import useUserStore from '../stores/userStore';
 import { addVehicle } from '../services/vehicleService';
 import Vehicle from '../interfaces/Vehicle';
 
 const make = ref('');
 const model = ref('');
-const year = ref<number>(0);
+const year = ref<number | null>(null);
 const vin = ref('');
-const mileage = ref<number>(0);
+const mileage = ref<number | null>(null);
 const router = useRouter();
 const userStore = useUserStore();
+
+const currentYear = new Date().getFullYear();
+const years = range(currentYear, currentYear - 21, -1);
 
 const handleSubmit = async () => {
   if (userStore.user) {
     const vehicle: Vehicle = {
       year: year.value,
-      make: make.value,
-      model: model.value,
+      make: lowercase(make.value),
+      model: lowercase(model.value),
       vin: vin.value,
       mileage: mileage.value,
     };
@@ -38,17 +43,14 @@ const handleSubmit = async () => {
 <template>
   <div class="container mt-2 mb-4">
     <form @submit.prevent="handleSubmit">
-      <div class="mb-3">
+      <div class="mb-2">
         <label for="year" class="form-label">Year</label>
-        <input
-          type="number"
-          class="form-control"
-          id="year"
-          v-model="year"
-          required
-        />
+        <select class="form-select" id="year" v-model="year" required>
+          <option value="" disabled>Select Year</option>
+          <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+        </select>
       </div>
-      <div class="mb-3">
+      <div class="mb-2">
         <label for="make" class="form-label">Make</label>
         <input
           type="text"
@@ -58,7 +60,7 @@ const handleSubmit = async () => {
           required
         />
       </div>
-      <div class="mb-3">
+      <div class="mb-2">
         <label for="model" class="form-label">Model</label>
         <input
           type="text"
@@ -68,11 +70,11 @@ const handleSubmit = async () => {
           required
         />
       </div>
-      <div class="mb-3">
+      <div class="mb-2">
         <label for="vin" class="form-label">VIN</label>
         <input type="text" class="form-control" id="vin" v-model="vin" />
       </div>
-      <div class="mb-3">
+      <div class="mb-2">
         <label for="mileage" class="form-label">Mileage</label>
         <input
           type="number"
@@ -85,3 +87,9 @@ const handleSubmit = async () => {
     </form>
   </div>
 </template>
+
+<style scoped>
+.container {
+  max-width: 762px;
+}
+</style>

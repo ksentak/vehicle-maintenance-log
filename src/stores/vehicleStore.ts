@@ -1,4 +1,3 @@
-// src/stores/vehicleStore.ts
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { getVehicles } from '../services/vehicleService';
