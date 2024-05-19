@@ -1,13 +1,6 @@
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../db/firebase';
-
-interface Vehicle {
-  make: string;
-  model: string;
-  year: number;
-  vin?: string;
-  mileage?: number;
-}
+import Vehicle from '../interfaces/Vehicle';
 
 const addVehicle = async (vehicle: Vehicle, userId: string) => {
   try {
@@ -24,4 +17,19 @@ const addVehicle = async (vehicle: Vehicle, userId: string) => {
     console.error('Error adding vehicle: ', err);
   }
 };
-export { addVehicle };
+
+const getVehicles = async (userId: string): Promise<Vehicle[]> => {
+  const vehicles: Vehicle[] = [];
+  try {
+    const vehiclesCollection = collection(db, 'users', userId, 'vehicles');
+    const vehiclesSnapshot = await getDocs(vehiclesCollection);
+    vehiclesSnapshot.forEach((doc) => {
+      vehicles.push(doc.data() as Vehicle);
+    });
+  } catch (err) {
+    console.error('Error retrieving vehicles: ', err);
+  }
+  return vehicles;
+};
+
+export { addVehicle, getVehicles };

@@ -29,7 +29,7 @@ const handleSubmit = async () => {
       console.error(err);
     }
   } else {
-    console.error('User is not authenticated');
+    console.error('User is not authenticated.');
   }
 };
 </script>

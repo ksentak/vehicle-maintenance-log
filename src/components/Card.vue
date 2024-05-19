@@ -16,7 +16,6 @@
 .card {
   cursor: pointer;
   transition: transform 0.2s;
-  min-height: 250px;
 }
 
 .card:hover {
