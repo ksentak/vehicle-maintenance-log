@@ -1,13 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineProps({
+  title: String,
+});
+</script>
 
 <template>
-  <div class="col-12 col-md-4 mb-4">
-    <div class="card">
-      <div
-        class="card-body d-flex flex-column justify-content-center align-items-center"
-      >
-        <slot></slot>
-      </div>
+  <div class="card">
+    <div class="card-body justify-content-center">
+      <h5 class="card-title text-center">
+        {{ title }}
+      </h5>
     </div>
   </div>
 </template>

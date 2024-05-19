@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import capitalize from 'lodash/capitalize';
+import Card from '../components/Card.vue';
 import AddVehicleCard from '../components/AddVehicleCard.vue';
 import useUserStore from '../stores/userStore';
 import { getVehicles } from '../services/vehicleService';
@@ -21,26 +22,26 @@ const fetchVehicles = async () => {
   }
 };
 
+const formatCardTitle = (vehicle: Vehicle) => {
+  const { make, model, year } = vehicle;
+
+  const cardTitle = `${year} ${capitalize(make)} ${capitalize(model)}`;
+  return cardTitle;
+};
+
 onMounted(fetchVehicles);
 </script>
 
 <template>
   <div class="container mt-5">
     <h1 class="text-center">Welcome to Vehicle Maintenance Log</h1>
-    <div class="row mt-4">
+    <div class="row content-row mt-4">
       <div
         v-for="(vehicle, index) in vehicles"
         :key="index"
         class="col-12 col-md-4 mb-4"
       >
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">
-              {{ vehicle.year }} {{ capitalize(vehicle.make) }}
-              {{ capitalize(vehicle.model) }}
-            </h5>
-          </div>
-        </div>
+        <Card :title="formatCardTitle(vehicle)" />
       </div>
       <AddVehicleCard />
     </div>
