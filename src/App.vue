@@ -1,7 +1,18 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router';
+import { computed } from 'vue';
+import { RouterView, useRoute } from 'vue-router';
+import Navbar from './components/Navbar.vue';
+
+// Get the current route
+const route = useRoute();
+
+// Computed property to determine whether to show the NavBar
+const showNavBar = computed(() => route.path !== '/auth');
 </script>
 
 <template>
-  <router-view></router-view>
+  <Navbar v-if="showNavBar" />
+  <div class="container mt-4">
+    <router-view />
+  </div>
 </template>

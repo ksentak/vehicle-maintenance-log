@@ -1,21 +1,28 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import Home from '../views/Home.vue';
+import Dashboard from '../views/Dashboard.vue';
 import Auth from '../views/Auth.vue';
+import AddVehicle from '../views/AddVehicle.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'Home',
-      component: Home,
+      name: 'Dashboard',
+      component: Dashboard,
       meta: { requiresAuth: true },
     },
     {
       path: '/auth',
       name: 'Auth',
       component: Auth,
+    },
+    {
+      path: '/add-vehicle',
+      name: 'AddVehicle',
+      component: AddVehicle,
+      meta: { requiresAuth: true },
     },
   ],
 });
@@ -38,7 +45,7 @@ router.beforeEach(async (to, _from, next) => {
     if (await getCurrentUser()) {
       next();
     } else {
-      next('/signin');
+      next('/auth');
     }
   } else {
     next();

@@ -18,12 +18,18 @@ const signOut = async () => {
     console.error('Error signing out', error);
   }
 };
+
+const returnHome = async () => {
+  router.push('/');
+};
 </script>
 
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Vehicle Maintenance Log</a>
+      <a class="navbar-brand" @click.prevent="returnHome"
+        >Vehicle Maintenance Log 🚗</a
+      >
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
           <li class="nav-item dropdown">
@@ -53,3 +59,9 @@ const signOut = async () => {
     </div>
   </nav>
 </template>
+
+<style scoped>
+.navbar-brand:hover {
+  cursor: pointer;
+}
+</style>
