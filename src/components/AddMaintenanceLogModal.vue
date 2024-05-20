@@ -30,6 +30,7 @@ const saveMaintenanceLog = async () => {
     );
     maintenanceLogStore.fetchMaintenanceLogs(vehicleId.value);
     resetForm();
+
     const modalElement = document.getElementById('addMaintenanceLogModal');
     if (modalElement) {
       const modalInstance = bootstrap.Modal.getInstance(modalElement);

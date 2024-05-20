@@ -1,5 +1,5 @@
 export default interface MaintenanceLog {
-  id?: string;
+  id: string;
   vehicleId: string;
   type: string;
   date: string;

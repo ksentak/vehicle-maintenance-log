@@ -3,7 +3,7 @@ import { db } from '../db/firebase';
 import MaintenanceLog from '../interfaces/MaintenanceLog';
 
 const addMaintenanceLog = async (
-  maintenanceLog: MaintenanceLog,
+  maintenanceLog: Omit<MaintenanceLog, 'id'>,
   userId: string,
 ) => {
   try {

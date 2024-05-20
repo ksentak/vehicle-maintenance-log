@@ -1,9 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import {
-  getMaintenanceLogs,
-  addMaintenanceLog,
-} from '../services/maintenanceLogService';
+import { getMaintenanceLogs } from '../services/maintenanceLogService';
 import useUserStore from './userStore';
 import MaintenanceLog from '../interfaces/MaintenanceLog';
 

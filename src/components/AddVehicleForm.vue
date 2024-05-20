@@ -3,39 +3,33 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import range from 'lodash/range';
 import lowercase from 'lodash/lowercase';
-import useUserStore from '../stores/userStore';
-import { addVehicle } from '../services/vehicleService';
+import useVehicleStore from '../stores/vehicleStore';
 import Vehicle from '../interfaces/Vehicle';
 
 const make = ref('');
 const model = ref('');
 const year = ref<number | null>(null);
 const vin = ref('');
-const mileage = ref<number | null>(null);
+
 const router = useRouter();
-const userStore = useUserStore();
+const vehicleStore = useVehicleStore();
 
 const currentYear = new Date().getFullYear();
 const years = range(currentYear, currentYear - 21, -1);
 
 const handleSubmit = async () => {
-  if (userStore.user) {
-    const vehicle: Vehicle = {
-      year: year.value,
-      make: lowercase(make.value),
-      model: lowercase(model.value),
-      vin: vin.value,
-      mileage: mileage.value,
-    };
+  const vehicle: Omit<Vehicle, 'id'> = {
+    year: year.value,
+    make: lowercase(make.value),
+    model: lowercase(model.value),
+    vin: lowercase(vin.value),
+  };
 
-    try {
-      await addVehicle(vehicle, userStore.user.uid);
-      router.push('/');
-    } catch (err) {
-      console.error(err);
-    }
-  } else {
-    console.error('User is not authenticated.');
+  try {
+    await vehicleStore.addVehicle(vehicle);
+    router.push('/');
+  } catch (err) {
+    console.error(err);
   }
 };
 </script>
@@ -73,15 +67,6 @@ const handleSubmit = async () => {
       <div class="mb-2">
         <label for="vin" class="form-label">VIN</label>
         <input type="text" class="form-control" id="vin" v-model="vin" />
-      </div>
-      <div class="mb-2">
-        <label for="mileage" class="form-label">Mileage</label>
-        <input
-          type="number"
-          class="form-control"
-          id="mileage"
-          v-model="mileage"
-        />
       </div>
       <button type="submit" class="btn btn-primary mt-2">Add Vehicle</button>
     </form>

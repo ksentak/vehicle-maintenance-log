@@ -2,11 +2,15 @@ import { doc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../db/firebase';
 import Vehicle from '../interfaces/Vehicle';
 
-const addVehicle = async (vehicle: Vehicle, userId: string) => {
+const createVehicle = async (
+  vehicle: Omit<Vehicle, 'id'>,
+  userId: string,
+): Promise<Vehicle | undefined> => {
   try {
     const vehiclesCollection = collection(db, 'users', userId, 'vehicles');
     const vehicleDocRef = doc(vehiclesCollection);
     await setDoc(vehicleDocRef, vehicle);
+    return { ...vehicle, id: vehicleDocRef.id };
   } catch (err) {
     console.error('Error adding vehicle: ', err);
   }
@@ -26,4 +30,4 @@ const getVehicles = async (userId: string): Promise<Vehicle[]> => {
   return vehicles;
 };
 
-export { addVehicle, getVehicles };
+export { createVehicle, getVehicles };

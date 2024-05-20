@@ -1,21 +1,26 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import isString from 'lodash/isString';
 import AddMaintenanceLogModal from '../components/AddMaintenanceLogModal.vue';
+import BackBtn from '../components/BackBtn.vue';
 import Loader from '../components/Loader.vue';
 import useMaintenanceLogStore from '../stores/maintenanceLogStore';
 import MaintenanceLog from '../interfaces/MaintenanceLog';
 
 const route = useRoute();
-const vehicleId = route.params.vehicleId;
+const vehicleId = isString(route.params.vehicleId)
+  ? route.params.vehicleId
+  : route.params.vehicleId[0];
 const maintenanceLogStore = useMaintenanceLogStore();
 const maintenanceLogs = ref<MaintenanceLog[]>([]);
 const isLoading = ref<boolean>(false);
 
+// Refactor
 const fetchMaintenanceLogs = async () => {
   isLoading.value = true;
   await maintenanceLogStore.fetchMaintenanceLogs(vehicleId);
-  maintenanceLogs.value = maintenanceLogStore.maintenanceLogs[vehicleId] || [];
+  maintenanceLogs.value = maintenanceLogStore.maintenanceLogs[vehicleId];
   isLoading.value = false;
 };
 
@@ -25,9 +30,10 @@ onMounted(fetchMaintenanceLogs);
 <template>
   <div class="container mt-5">
     <h1 class="text-center">Maintenance Log</h1>
+    <BackBtn />
     <button
       type="button"
-      class="btn btn-primary mb-3"
+      class="btn btn-primary"
       data-bs-toggle="modal"
       data-bs-target="#addMaintenanceLogModal"
     >

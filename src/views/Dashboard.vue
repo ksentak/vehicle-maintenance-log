@@ -21,13 +21,13 @@ const formatCardTitle = (vehicle: Vehicle) => {
   return cardTitle;
 };
 
-const openMaintenanceLog = (vehicleId: string) => {
+const openMaintenanceLogPage = (vehicleId: string) => {
   router.push(`/maintenance-log/${vehicleId}`);
 };
 
 onMounted(async () => {
   isLoading.value = true;
-  if (vehicleStore.vehicles.length === 0) {
+  if (!vehicleStore.vehicles.length) {
     await vehicleStore.fetchVehicles();
   }
   vehicles.value = vehicleStore.vehicles;
@@ -46,7 +46,7 @@ onMounted(async () => {
         class="col-12 col-md-4 mb-4"
       >
         <Card
-          @click="openMaintenanceLog(vehicle.id)"
+          @click="openMaintenanceLogPage(vehicle.id)"
           :title="formatCardTitle(vehicle)"
         />
       </div>
