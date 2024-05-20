@@ -2,12 +2,12 @@ import { doc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../db/firebase';
 import MaintenanceLog from '../interfaces/MaintenanceLog';
 
-const addMaintenanceLog = async (
-  maintenanceLog: Omit<MaintenanceLog, 'id'>,
+const createMaintenanceLog = async (
   userId: string,
-) => {
+  vehicleId: string,
+  maintenanceLog: Omit<MaintenanceLog, 'id'>,
+): Promise<MaintenanceLog | undefined> => {
   try {
-    const { vehicleId, ...logData } = maintenanceLog;
     const maintenanceLogsCollection = collection(
       db,
       'users',
@@ -17,7 +17,8 @@ const addMaintenanceLog = async (
       'maintenanceLogs',
     );
     const maintenanceLogDocRef = doc(maintenanceLogsCollection);
-    await setDoc(maintenanceLogDocRef, logData);
+    await setDoc(maintenanceLogDocRef, maintenanceLog);
+    return { ...maintenanceLog, id: maintenanceLogDocRef.id };
   } catch (err) {
     console.error('Error adding maintenance log: ', err);
   }
@@ -51,4 +52,4 @@ const getMaintenanceLogs = async (
   return maintenanceLogs;
 };
 
-export { addMaintenanceLog, getMaintenanceLogs };
+export { createMaintenanceLog, getMaintenanceLogs };

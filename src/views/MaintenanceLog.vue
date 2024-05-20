@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import isString from 'lodash/isString';
+import get from 'lodash/get';
 import AddMaintenanceLogModal from '../components/AddMaintenanceLogModal.vue';
 import BackBtn from '../components/BackBtn.vue';
 import Loader from '../components/Loader.vue';
@@ -19,7 +20,12 @@ const isLoading = ref<boolean>(false);
 // Refactor
 const fetchMaintenanceLogs = async () => {
   isLoading.value = true;
-  await maintenanceLogStore.fetchMaintenanceLogs(vehicleId);
+  const logs = get(maintenanceLogStore.maintenanceLogs, vehicleId, []);
+
+  if (!logs.length) {
+    await maintenanceLogStore.fetchMaintenanceLogs(vehicleId);
+  }
+
   maintenanceLogs.value = maintenanceLogStore.maintenanceLogs[vehicleId];
   isLoading.value = false;
 };

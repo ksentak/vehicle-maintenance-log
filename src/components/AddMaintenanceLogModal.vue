@@ -3,15 +3,15 @@ import { ref } from 'vue';
 import useMaintenanceLogStore from '../stores/maintenanceLogStore';
 import MaintenanceLog from '../interfaces/MaintenanceLog';
 
-const maintenanceLogStore = useMaintenanceLogStore();
-const maintenanceLog = ref<Partial<MaintenanceLog>>({
+const props = defineProps<{ vehicleId: string }>();
+const maintenanceLog = ref({
   type: '',
   date: '',
   mileage: 0,
   notes: '',
 });
 
-const vehicleId = ref<string | null>(null);
+const maintenanceLogStore = useMaintenanceLogStore();
 
 const resetForm = () => {
   maintenanceLog.value = {
@@ -22,20 +22,19 @@ const resetForm = () => {
   };
 };
 
-const saveMaintenanceLog = async () => {
-  if (vehicleId.value) {
-    await maintenanceLogStore.addMaintenanceLog(
-      { ...maintenanceLog.value, vehicleId: vehicleId.value } as MaintenanceLog,
-      maintenanceLogStore.user?.uid!,
-    );
-    maintenanceLogStore.fetchMaintenanceLogs(vehicleId.value);
-    resetForm();
+const formatMaintenanceLog = (): Omit<MaintenanceLog, 'id'> => {
+  return { ...maintenanceLog.value, vehicleId: props.vehicleId };
+};
 
-    const modalElement = document.getElementById('addMaintenanceLogModal');
-    if (modalElement) {
-      const modalInstance = bootstrap.Modal.getInstance(modalElement);
-      modalInstance?.hide();
-    }
+const saveMaintenanceLog = async () => {
+  const formattedLog = formatMaintenanceLog();
+  maintenanceLogStore.addMaintenanceLog(formattedLog);
+  resetForm();
+
+  const modalElement = document.getElementById('addMaintenanceLogModal');
+  if (modalElement) {
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    modalInstance?.hide();
   }
 };
 </script>

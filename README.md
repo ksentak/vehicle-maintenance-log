@@ -1,5 +1,11 @@
 # Vehicle Maintenance Log
 
+Explain project structure.
+Explain IDs with Firebase.
+Explain CRUDS and how firebase could be stripped out for different api service layer.
+Explain how stores and how app holds state.
+Explain getting started with development.
+
 This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
 ## Recommended Setup
