@@ -18,7 +18,7 @@ defineProps<{
         <p class="card-text mt-3">Notes: {{ log.notes }}</p>
       </div>
       <div class="mt-auto text-end">
-        <button class="btn btn-warning btn-sm me-2">Edit</button>
+        <button class="btn btn-primary btn-sm me-2">Edit</button>
         <button class="btn btn-danger btn-sm">Delete</button>
       </div>
     </div>

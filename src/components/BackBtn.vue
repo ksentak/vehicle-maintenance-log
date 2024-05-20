@@ -9,5 +9,5 @@ const goBack = () => {
 </script>
 
 <template>
-  <button class="btn btn-danger" @click="goBack">← Go Back</button>
+  <button class="btn btn-secondary" @click="goBack">← Go Back</button>
 </template>
