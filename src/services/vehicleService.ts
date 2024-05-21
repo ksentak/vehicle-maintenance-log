@@ -8,20 +8,6 @@ import {
 import { db } from '../db/firebase';
 import Vehicle from '../interfaces/Vehicle';
 
-const createVehicle = async (
-  vehicle: Omit<Vehicle, 'id'>,
-  userId: string,
-): Promise<Vehicle | undefined> => {
-  try {
-    const vehiclesCollection = collection(db, 'users', userId, 'vehicles');
-    const vehicleDocRef = doc(vehiclesCollection);
-    await setDoc(vehicleDocRef, vehicle);
-    return { ...vehicle, id: vehicleDocRef.id };
-  } catch (err) {
-    console.error('Error adding vehicle: ', err);
-  }
-};
-
 const getVehicles = async (userId: string): Promise<Vehicle[]> => {
   const vehicles: Vehicle[] = [];
   try {
@@ -36,6 +22,29 @@ const getVehicles = async (userId: string): Promise<Vehicle[]> => {
   return vehicles;
 };
 
+const createVehicle = async (
+  vehicle: Omit<Vehicle, 'id'>,
+  userId: string,
+): Promise<Vehicle | undefined> => {
+  try {
+    const vehiclesCollection = collection(db, 'users', userId, 'vehicles');
+    const vehicleDocRef = doc(vehiclesCollection);
+    await setDoc(vehicleDocRef, vehicle);
+    return { ...vehicle, id: vehicleDocRef.id };
+  } catch (err) {
+    console.error('Error adding vehicle: ', err);
+  }
+};
+
+const editVehicle = async (userId: string, vehicle: Vehicle): Promise<void> => {
+  try {
+    const vehicleDocRef = doc(db, 'users', userId, 'vehicles', vehicle.id);
+    await setDoc(vehicleDocRef, vehicle, { merge: true });
+  } catch (err) {
+    console.error('Error editing vehicle: ', err);
+  }
+};
+
 const removeVehicle = async (
   userId: string,
   vehicleId: string,
@@ -48,4 +57,4 @@ const removeVehicle = async (
   }
 };
 
-export { createVehicle, getVehicles, removeVehicle };
+export { getVehicles, createVehicle, editVehicle, removeVehicle };

@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import {
+  getMaintenanceLogs,
   createMaintenanceLog,
   editMaintenanceLog,
-  getMaintenanceLogs,
   removeMaintenanceLog,
 } from '../services/maintenanceLogService';
 import useUserStore from './userStore';
@@ -55,9 +55,9 @@ const useMaintenanceLogStore = defineStore('maintenanceLogStore', () => {
   };
 
   const updateMaintenanceLog = async (log: MaintenanceLog) => {
-    const { vehicleId } = log;
     if (userStore.user) {
       try {
+        const { vehicleId } = log;
         await editMaintenanceLog(userStore.user.uid, vehicleId, log);
         const index = maintenanceLogs.value[vehicleId].findIndex(
           (l) => l.id === log.id,

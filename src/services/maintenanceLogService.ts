@@ -8,6 +8,37 @@ import {
 import { db } from '../db/firebase';
 import MaintenanceLog from '../interfaces/MaintenanceLog';
 
+const getMaintenanceLogs = async (
+  userId: string,
+  vehicleId: string,
+): Promise<MaintenanceLog[]> => {
+  const maintenanceLogs: MaintenanceLog[] = [];
+  try {
+    const maintenanceLogsCollection = collection(
+      db,
+      'users',
+      userId,
+      'vehicles',
+      vehicleId,
+      'maintenanceLogs',
+    );
+    const maintenanceLogsSnapshot = await getDocs(maintenanceLogsCollection);
+    maintenanceLogsSnapshot.forEach((doc) => {
+      maintenanceLogs.push({
+        id: doc.id,
+        vehicleId,
+        ...doc.data(),
+      } as MaintenanceLog);
+    });
+    maintenanceLogs.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    );
+  } catch (err) {
+    console.error('Error retrieving maintenance logs: ', err);
+  }
+  return maintenanceLogs;
+};
+
 const createMaintenanceLog = async (
   userId: string,
   vehicleId: string,
@@ -51,37 +82,6 @@ const editMaintenanceLog = async (
   }
 };
 
-const getMaintenanceLogs = async (
-  userId: string,
-  vehicleId: string,
-): Promise<MaintenanceLog[]> => {
-  const maintenanceLogs: MaintenanceLog[] = [];
-  try {
-    const maintenanceLogsCollection = collection(
-      db,
-      'users',
-      userId,
-      'vehicles',
-      vehicleId,
-      'maintenanceLogs',
-    );
-    const maintenanceLogsSnapshot = await getDocs(maintenanceLogsCollection);
-    maintenanceLogsSnapshot.forEach((doc) => {
-      maintenanceLogs.push({
-        id: doc.id,
-        vehicleId,
-        ...doc.data(),
-      } as MaintenanceLog);
-    });
-    maintenanceLogs.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-    );
-  } catch (err) {
-    console.error('Error retrieving maintenance logs: ', err);
-  }
-  return maintenanceLogs;
-};
-
 const removeMaintenanceLog = async (
   userId: string,
   vehicleId: string,
@@ -104,8 +104,8 @@ const removeMaintenanceLog = async (
 };
 
 export {
+  getMaintenanceLogs,
   createMaintenanceLog,
   editMaintenanceLog,
-  getMaintenanceLogs,
   removeMaintenanceLog,
 };

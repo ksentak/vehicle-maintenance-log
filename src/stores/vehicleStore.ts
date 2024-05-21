@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import {
-  createVehicle,
   getVehicles,
+  createVehicle,
+  editVehicle,
   removeVehicle,
 } from '../services/vehicleService';
 import useUserStore from './userStore';
@@ -11,6 +12,18 @@ import Vehicle from '../interfaces/Vehicle';
 const useVehicleStore = defineStore('vehicleStore', () => {
   const vehicles = ref<Vehicle[]>([]);
   const userStore = useUserStore();
+
+  const fetchVehicles = async () => {
+    if (userStore.user) {
+      try {
+        vehicles.value = await getVehicles(userStore.user.uid);
+      } catch (err) {
+        console.error('Error retrieving vehicles: ', err);
+      }
+    } else {
+      console.error('User is not authenticated.');
+    }
+  };
 
   const addVehicle = async (vehicle: Omit<Vehicle, 'id'>) => {
     if (userStore.user) {
@@ -27,12 +40,16 @@ const useVehicleStore = defineStore('vehicleStore', () => {
     }
   };
 
-  const fetchVehicles = async () => {
+  const updateVehicle = async (vehicle: Vehicle) => {
     if (userStore.user) {
       try {
-        vehicles.value = await getVehicles(userStore.user.uid);
+        await editVehicle(userStore.user.uid, vehicle);
+        const index = vehicles.value.findIndex((v) => v.id === vehicle.id);
+        if (index !== -1) {
+          vehicles.value[index] = vehicle;
+        }
       } catch (err) {
-        console.error('Error retrieving vehicles: ', err);
+        console.error('Error updating vehicle: ', err);
       }
     } else {
       console.error('User is not authenticated.');
@@ -54,7 +71,7 @@ const useVehicleStore = defineStore('vehicleStore', () => {
     }
   };
 
-  return { vehicles, fetchVehicles, addVehicle, deleteVehicle };
+  return { vehicles, fetchVehicles, addVehicle, updateVehicle, deleteVehicle };
 });
 
 export default useVehicleStore;
