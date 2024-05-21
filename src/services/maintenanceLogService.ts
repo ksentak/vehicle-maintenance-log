@@ -1,4 +1,10 @@
-import { doc, setDoc, collection, getDocs } from 'firebase/firestore';
+import {
+  doc,
+  setDoc,
+  collection,
+  getDocs,
+  deleteDoc,
+} from 'firebase/firestore';
 import { db } from '../db/firebase';
 import MaintenanceLog from '../interfaces/MaintenanceLog';
 
@@ -24,6 +30,27 @@ const createMaintenanceLog = async (
   }
 };
 
+const editMaintenanceLog = async (
+  userId: string,
+  vehicleId: string,
+  maintenanceLog: MaintenanceLog,
+): Promise<void> => {
+  try {
+    const maintenanceLogDocRef = doc(
+      db,
+      'users',
+      userId,
+      'vehicles',
+      vehicleId,
+      'maintenanceLogs',
+      maintenanceLog.id,
+    );
+    await setDoc(maintenanceLogDocRef, maintenanceLog, { merge: true });
+  } catch (err) {
+    console.error('Error editing maintenance log: ', err);
+  }
+};
+
 const getMaintenanceLogs = async (
   userId: string,
   vehicleId: string,
@@ -46,10 +73,39 @@ const getMaintenanceLogs = async (
         ...doc.data(),
       } as MaintenanceLog);
     });
+    maintenanceLogs.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    );
   } catch (err) {
     console.error('Error retrieving maintenance logs: ', err);
   }
   return maintenanceLogs;
 };
 
-export { createMaintenanceLog, getMaintenanceLogs };
+const removeMaintenanceLog = async (
+  userId: string,
+  vehicleId: string,
+  logId: string,
+): Promise<void> => {
+  try {
+    const maintenanceLogDocRef = doc(
+      db,
+      'users',
+      userId,
+      'vehicles',
+      vehicleId,
+      'maintenanceLogs',
+      logId,
+    );
+    await deleteDoc(maintenanceLogDocRef);
+  } catch (err) {
+    console.error('Error removing maintenance log: ', err);
+  }
+};
+
+export {
+  createMaintenanceLog,
+  editMaintenanceLog,
+  getMaintenanceLogs,
+  removeMaintenanceLog,
+};

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import isString from 'lodash/isString';
 import find from 'lodash/find';
@@ -51,6 +51,15 @@ const getVehicleInfo = () => {
   }
 };
 
+watch(
+  () => maintenanceLogStore.maintenanceLogs[vehicleId],
+  (newLogs: MaintenanceLog[]) => {
+    if (newLogs) {
+      maintenanceLogs.value = newLogs;
+    }
+  },
+);
+
 onMounted(async () => {
   isLoading.value = true;
   getVehicleInfo();
@@ -62,19 +71,12 @@ onMounted(async () => {
 <template>
   <div class="container mt-5">
     <h1 class="text-center text-capitalize">
-      {{ vehicleInfo.year }} {{ vehicleInfo.make }}
+      {{ vehicleInfo.year ? vehicleInfo.year : '' }} {{ vehicleInfo.make }}
       {{ vehicleInfo.model }} Maintenance Logs
     </h1>
     <div class="d-flex justify-content-between mb-3">
       <BackBtn />
-      <button
-        type="button"
-        class="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#addMaintenanceLogModal"
-      >
-        Add Log
-      </button>
+      <MaintenanceLogModal :vehicleId="vehicleInfo.id" :isEditing="false" />
     </div>
     <Loader v-if="isLoading" />
     <div v-else class="mt-4">
@@ -82,8 +84,8 @@ onMounted(async () => {
         v-for="log in maintenanceLogs"
         :key="log.id"
         :log="log"
+        :vehicleId="vehicleInfo.id"
       />
     </div>
-    <MaintenanceLogModal :vehicleId="vehicleId" />
   </div>
 </template>

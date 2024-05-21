@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import MaintenanceLog from '../interfaces/MaintenanceLog';
+import MaintenanceLogModal from './MaintenanceLogModal.vue';
+import DeleteMaintenanceLogModal from './DeleteMaintenanceLogModal.vue';
 
 defineProps<{
   log: MaintenanceLog;
+  vehicleId: string;
 }>();
 </script>
 
@@ -17,9 +20,15 @@ defineProps<{
         </h6>
         <p class="card-text mt-3">Notes: {{ log.notes }}</p>
       </div>
-      <div class="mt-auto text-end">
-        <button class="btn btn-primary btn-sm me-2">Edit</button>
-        <button class="btn btn-danger btn-sm">Delete</button>
+      <div class="mt-auto d-flex justify-content-end align-items-center">
+        <MaintenanceLogModal
+          :vehicleId="vehicleId"
+          :isEditing="true"
+          :btnStyle="'btn btn-primary btn-sm me-2'"
+          :logData="log"
+        />
+        <DeleteMaintenanceLogModal :logData="log" />
+        <!-- <button class="btn btn-danger btn-sm">Delete</button> -->
       </div>
     </div>
   </div>
