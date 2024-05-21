@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import capitalize from 'lodash/capitalize';
-import Card from '../components/Card.vue';
+import VehicleCard from '../components/VehicleCard.vue';
 import AddVehicleCard from '../components/AddVehicleCard.vue';
 import Loader from '../components/Loader.vue';
 import useVehicleStore from '../stores/vehicleStore';
@@ -45,7 +45,7 @@ onMounted(async () => {
         :key="index"
         class="col-12 col-md-4 mb-4"
       >
-        <Card
+        <VehicleCard
           @click="openMaintenanceLogPage(vehicle.id)"
           :title="formatCardTitle(vehicle)"
         />

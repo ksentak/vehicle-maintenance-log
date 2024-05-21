@@ -9,8 +9,8 @@ const props = defineProps<{
 
 const maintenanceLogStore = useMaintenanceLogStore();
 
-const deleteMaintenanceLog = () => {
-  maintenanceLogStore.deleteMaintenanceLog(props.logData);
+const deleteMaintenanceLog = async () => {
+  await maintenanceLogStore.deleteMaintenanceLog(props.logData);
 };
 </script>
 

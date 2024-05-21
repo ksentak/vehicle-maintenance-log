@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Card from './Card.vue';
+import Card from './VehicleCard.vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();

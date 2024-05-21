@@ -5,6 +5,7 @@ import isString from 'lodash/isString';
 import find from 'lodash/find';
 import MaintenanceLogModal from '../components/MaintenanceLogModal.vue';
 import MaintenanceLogCard from '../components/MaintenanceLogCard.vue';
+import DeleteVehicleModal from '../components/DeleteVehicleModal.vue';
 import BackBtn from '../components/BackBtn.vue';
 import Loader from '../components/Loader.vue';
 import useMaintenanceLogStore from '../stores/maintenanceLogStore';
@@ -76,7 +77,11 @@ onMounted(async () => {
     </h1>
     <div class="d-flex justify-content-between mb-3">
       <BackBtn />
-      <MaintenanceLogModal :vehicleId="vehicleInfo.id" :isEditing="false" />
+      <div class="d-flex ms-auto button-group">
+        <DeleteVehicleModal :vehicleId="vehicleInfo.id" />
+        <!-- <MaintenanceLogModal :vehicleId="vehicleInfo.id" /> -->
+        <MaintenanceLogModal :vehicleId="vehicleInfo.id" :isEditing="false" />
+      </div>
     </div>
     <Loader v-if="isLoading" />
     <div v-else class="mt-4">
@@ -89,3 +94,13 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.button-group > * {
+  margin-left: 8px; /* Adjust the spacing as needed */
+}
+
+.button-group > *:first-child {
+  margin-left: 0;
+}
+</style>

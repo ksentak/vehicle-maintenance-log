@@ -1,4 +1,10 @@
-import { doc, setDoc, collection, getDocs } from 'firebase/firestore';
+import {
+  doc,
+  setDoc,
+  collection,
+  getDocs,
+  deleteDoc,
+} from 'firebase/firestore';
 import { db } from '../db/firebase';
 import Vehicle from '../interfaces/Vehicle';
 
@@ -30,4 +36,16 @@ const getVehicles = async (userId: string): Promise<Vehicle[]> => {
   return vehicles;
 };
 
-export { createVehicle, getVehicles };
+const removeVehicle = async (
+  userId: string,
+  vehicleId: string,
+): Promise<void> => {
+  try {
+    const vehicleDocRef = doc(db, 'users', userId, 'vehicles', vehicleId);
+    await deleteDoc(vehicleDocRef);
+  } catch (err) {
+    console.error('Error removing vehicle: ', err);
+  }
+};
+
+export { createVehicle, getVehicles, removeVehicle };

@@ -6,7 +6,7 @@ const props = defineProps<{
   openBtnText: string;
   openBtnStyle?: string;
   actionBtnText: string;
-  actionBtnStyle: string;
+  actionBtnStyle?: string;
   submitFunc: any;
 }>();
 

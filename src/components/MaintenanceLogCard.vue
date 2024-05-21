@@ -28,7 +28,6 @@ defineProps<{
           :logData="log"
         />
         <DeleteMaintenanceLogModal :logData="log" />
-        <!-- <button class="btn btn-danger btn-sm">Delete</button> -->
       </div>
     </div>
   </div>
