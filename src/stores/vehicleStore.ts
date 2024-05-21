@@ -46,7 +46,11 @@ const useVehicleStore = defineStore('vehicleStore', () => {
         await editVehicle(userStore.user.uid, vehicle);
         const index = vehicles.value.findIndex((v) => v.id === vehicle.id);
         if (index !== -1) {
-          vehicles.value[index] = vehicle;
+          vehicles.value = [
+            ...vehicles.value.slice(0, index),
+            vehicle,
+            ...vehicles.value.slice(index + 1),
+          ];
         }
       } catch (err) {
         console.error('Error updating vehicle: ', err);

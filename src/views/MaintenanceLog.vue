@@ -5,6 +5,7 @@ import isString from 'lodash/isString';
 import find from 'lodash/find';
 import MaintenanceLogModal from '../components/MaintenanceLogModal.vue';
 import MaintenanceLogCard from '../components/MaintenanceLogCard.vue';
+import EditVehicleModal from '../components/EditVehicleModal.vue';
 import DeleteVehicleModal from '../components/DeleteVehicleModal.vue';
 import BackBtn from '../components/BackBtn.vue';
 import Loader from '../components/Loader.vue';
@@ -25,7 +26,6 @@ const isLoading = ref<boolean>(false);
 
 const route = useRoute();
 const vehicleStore = useVehicleStore();
-
 const maintenanceLogStore = useMaintenanceLogStore();
 
 const vehicleId = isString(route.params.vehicleId)
@@ -42,6 +42,7 @@ const fetchMaintenanceLogs = async () => {
   maintenanceLogs.value = maintenanceLogStore.maintenanceLogs[vehicleId];
 };
 
+// Update to find vehicle in store, if not found, make api call
 const getVehicleInfo = () => {
   const foundVehicle = find(vehicleStore.vehicles, (vehicle: Vehicle) => {
     return vehicle.id === vehicleId;
@@ -53,12 +54,19 @@ const getVehicleInfo = () => {
 };
 
 watch(
-  () => maintenanceLogStore.maintenanceLogs[vehicleId],
-  (newLogs: MaintenanceLog[]) => {
+  [
+    () => maintenanceLogStore.maintenanceLogs[vehicleId],
+    () => vehicleStore.vehicles,
+  ],
+  ([newLogs, newVehicles]) => {
     if (newLogs) {
       maintenanceLogs.value = newLogs;
     }
+    if (newVehicles) {
+      getVehicleInfo();
+    }
   },
+  { immediate: true },
 );
 
 onMounted(async () => {
@@ -75,11 +83,11 @@ onMounted(async () => {
       {{ vehicleInfo.year ? vehicleInfo.year : '' }} {{ vehicleInfo.make }}
       {{ vehicleInfo.model }} Maintenance Logs
     </h1>
-    <div class="d-flex justify-content-between mb-3">
+    <div class="d-flex justify-content-between my-3">
       <BackBtn />
       <div class="d-flex ms-auto button-group">
         <DeleteVehicleModal :vehicleId="vehicleInfo.id" />
-        <!-- <MaintenanceLogModal :vehicleId="vehicleInfo.id" /> -->
+        <EditVehicleModal :vehicleData="vehicleInfo" />
         <MaintenanceLogModal :vehicleId="vehicleInfo.id" :isEditing="false" />
       </div>
     </div>
