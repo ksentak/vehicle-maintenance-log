@@ -42,15 +42,22 @@ const fetchMaintenanceLogs = async () => {
   maintenanceLogs.value = maintenanceLogStore.maintenanceLogs[vehicleId];
 };
 
-// Update to find vehicle in store, if not found, make api call
-const getVehicleInfo = () => {
-  const foundVehicle = find(vehicleStore.vehicles, (vehicle: Vehicle) => {
-    return vehicle.id === vehicleId;
-  });
+const getVehicleInfo = async () => {
+  const foundVehicle = find(
+    vehicleStore.vehicles,
+    (vehicle) => vehicle.id === vehicleId,
+  );
 
   if (foundVehicle) {
     vehicleInfo.value = foundVehicle;
+  } else {
+    await fetchAndSetVehicles();
   }
+};
+
+const fetchAndSetVehicles = async () => {
+  await vehicleStore.fetchVehicles();
+  return find(vehicleStore.vehicles, (vehicle) => vehicle.id === vehicleId);
 };
 
 watch(
