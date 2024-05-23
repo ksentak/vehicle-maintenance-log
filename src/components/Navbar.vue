@@ -25,7 +25,7 @@ const returnHome = async () => {
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
       <a class="navbar-brand" @click.prevent="returnHome"
         >Vehicle Maintenance Log 🚗</a

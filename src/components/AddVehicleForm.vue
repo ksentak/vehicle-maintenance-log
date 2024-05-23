@@ -15,7 +15,7 @@ const router = useRouter();
 const vehicleStore = useVehicleStore();
 
 const currentYear = new Date().getFullYear();
-const years = range(currentYear, currentYear - 21, -1);
+const years = range(currentYear, currentYear - 26, -1);
 
 const handleSubmit = async () => {
   const vehicle: Omit<Vehicle, 'id'> = {

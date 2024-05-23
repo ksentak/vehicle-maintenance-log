@@ -40,7 +40,7 @@ const updateVehicle = async () => {
   <Modal
     :title="'Edit Vehicle'"
     :openBtnText="'Edit Vehicle'"
-    :openBtnStyle="'btn btn-info'"
+    :openBtnStyle="'btn btn-secondary'"
     :actionBtnText="'Update Vehicle'"
     :submitFunc="updateVehicle"
   >

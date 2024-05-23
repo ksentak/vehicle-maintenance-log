@@ -21,13 +21,13 @@ defineProps<{
         <p class="card-text mt-3">Notes: {{ log.notes }}</p>
       </div>
       <div class="mt-auto d-flex justify-content-end align-items-center">
+        <DeleteMaintenanceLogModal :logData="log" />
         <MaintenanceLogModal
           :vehicleId="vehicleId"
           :isEditing="true"
-          :btnStyle="'btn btn-primary btn-sm me-2'"
+          :btnStyle="'btn btn-primary btn-sm'"
           :logData="log"
         />
-        <DeleteMaintenanceLogModal :logData="log" />
       </div>
     </div>
   </div>

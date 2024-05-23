@@ -18,7 +18,7 @@ const deleteMaintenanceLog = async () => {
   <Modal
     :title="'Delete Maintenance Log'"
     :openBtnText="'Delete'"
-    :openBtnStyle="'btn btn-danger btn-sm'"
+    :openBtnStyle="'btn btn-danger btn-sm me-2'"
     :actionBtnText="'Delete'"
     :actionBtnStyle="'btn btn-danger'"
     :submitFunc="deleteMaintenanceLog"

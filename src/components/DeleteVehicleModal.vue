@@ -20,7 +20,7 @@ const deleteVehicle = async () => {
   <Modal
     :title="'Delete Vehicle'"
     :openBtnText="'Delete Vehicle'"
-    :openBtnStyle="'btn btn-warning'"
+    :openBtnStyle="'btn btn-danger'"
     :actionBtnText="'Delete'"
     :actionBtnStyle="'btn btn-danger'"
     :submitFunc="deleteVehicle"
